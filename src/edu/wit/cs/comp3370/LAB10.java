@@ -2,6 +2,7 @@ package edu.wit.cs.comp3370;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /* Calculates the reconstruction matrix of the Floyd-Warshall algorithm for
@@ -10,15 +11,48 @@ import java.util.Scanner;
  * Wentworth Institute of Technology
  * COMP 3370
  * Lab Assignment 10
- * 
+ * Rachel Palmer
  */
 
 public class LAB10 {
 	
 	// TODO document this method
 	public static Vertex[][] FindAllPaths(Graph g) {
-		// TODO implement this method
-		return null;
+		Vertex[] list = g.getVertices();
+		Double[][] distances = new Double[list.length][list.length];
+		Vertex[][] pi = new Vertex[list.length][list.length];
+		//construct D
+		for(int i = 0; i < list.length; i++){
+			for(int j = 0; j < list.length; j++){
+				if(distances[i][j] == null)
+					distances[i][j] = Double.POSITIVE_INFINITY;
+			}
+			for(int j = 0; j < list[i].outEdges.size(); j++){
+				distances[i][list[i].outEdges.get(j).dst.ID] = list[i].outEdges.get(j).cost;
+			}
+			distances[i][i] = 0.0;
+		}
+		
+		//construct PI
+		for(int i = 0; i < list.length; i++){
+			for(int j = 0; j < list.length; j++){
+				if(distances[i][j] != 0 && distances[i][j] != Double.POSITIVE_INFINITY)
+					pi[i][j] = list[j];
+			}
+		}
+		
+		for(int k = 0; k < list.length; k++){
+			//create new distances matrix here
+			for(int i = 0; i < list.length; i++){
+				for(int j = 0; j < list.length; j++){
+					if(distances[i][j] > (distances[i][k] + distances[k][j])){ 
+						distances[i][j] = distances[i][k] + distances[k][j];
+						pi[i][j] = pi[i][k];
+					}
+				}
+			}
+		}
+		return pi;
 	}
 	
 	/********************************************
