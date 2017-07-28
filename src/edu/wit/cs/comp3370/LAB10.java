@@ -16,7 +16,16 @@ import java.util.Scanner;
 
 public class LAB10 {
 	
-	// TODO document this method
+	/**
+	 * FindAllPaths takes a given graph object and first converts it into an adjacency matrix. In 
+	 * the same loop, it will then construct a PI matrix of connections to the shortest paths among
+	 * vertices. The first PI generated just shows basic connections (vertices directly connected by
+	 * one edge). Then, it uses Floyd-Warshall algorithm to dynamically construct the shortest paths
+	 * from one vertex to any other vertex, based on edge costs, using matrix data that updates n
+	 * times. 
+	 * @param g		graph generated based on vertex and edge files
+	 * @return		returns PI, the matrix of shortest paths
+	 */
 	public static Vertex[][] FindAllPaths(Graph g) {
 		Vertex[] list = g.getVertices();
 		Double[][] distances = new Double[list.length][list.length];
@@ -31,18 +40,16 @@ public class LAB10 {
 				distances[i][list[i].outEdges.get(j).dst.ID] = list[i].outEdges.get(j).cost;
 			}
 			distances[i][i] = 0.0;
-		}
-		
-		//construct PI
-		for(int i = 0; i < list.length; i++){
+			//Construct PI
 			for(int j = 0; j < list.length; j++){
 				if(distances[i][j] != 0 && distances[i][j] != Double.POSITIVE_INFINITY)
 					pi[i][j] = list[j];
 			}
 		}
 		
+		//floyd-warshall
 		for(int k = 0; k < list.length; k++){
-			//create new distances matrix here
+			//update new distances matrix
 			for(int i = 0; i < list.length; i++){
 				for(int j = 0; j < list.length; j++){
 					if(distances[i][j] > (distances[i][k] + distances[k][j])){ 
